@@ -8,6 +8,6 @@ export enum TransactionTypeEnum {
 export enum TransactionMethodEnum {
   PIX = 'PIX',
   TED = 'TED',
-  CASH_DEPOSITO = 'CASH_DEPOSIT',
+  CASH_DEPOSIT = 'CASH_DEPOSIT',
   CASH_WITHDRAWAL = 'CASH_WITHDRAWAL',
 }
