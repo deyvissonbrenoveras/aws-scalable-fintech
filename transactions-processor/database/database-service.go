@@ -6,10 +6,23 @@ import (
 	"github.com/deyvissonbrenoveras/aws-scalable-fintech/transactions-processor/transactions"
 )
 
-var transactionsDB []transactions.Transaction
+var transactionsDB []*transactions.Transaction
 
-func SaveTransaction(transaction transactions.Transaction) error {
-	fmt.Printf("Saving transaction to database: %+v\n", transaction)
+func GetTransactionById(transactionId string) *transactions.Transaction {
+	for _, transaction := range transactionsDB {
+		if transaction.Id == transactionId {
+			return transaction
+		}
+	}
+	return nil
+}
+
+func SaveTransaction(transaction *transactions.Transaction) error {
+	fmt.Printf("Saving transaction to database with id %+v\n", transaction.Id)
 	transactionsDB = append(transactionsDB, transaction)
 	return nil
+}
+
+func GetAllTransactions() []*transactions.Transaction{
+	return transactionsDB
 }

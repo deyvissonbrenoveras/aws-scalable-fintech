@@ -1,22 +1,41 @@
 package main
 
 import (
+	"fmt"
+	"sync"
+
+	"github.com/deyvissonbrenoveras/aws-scalable-fintech/transactions-processor/database"
 	"github.com/deyvissonbrenoveras/aws-scalable-fintech/transactions-processor/processor"
 	"github.com/deyvissonbrenoveras/aws-scalable-fintech/transactions-processor/transactions"
+	"github.com/google/uuid"
 )
 
 func main() {
 
-	newTransaction := transactions.Transaction{
-		TransactionID: "facc880a-bb63-4133-bc08-ac8f74492491",
-		Amount:        1000,
-		UserId:        "c52f3e4b0-8c1f-4a2b-9d3f-5e6c7d8e9f0",
-		AccountID:     "account123",
-		Type:          "TRANSFER",
-		Method:        "PIX",
-		Destination:   "pixkey123",
-	}
-	processor.ProcessTransaction(newTransaction)
+	var wg sync.WaitGroup
 
+	for i :=range 10000 {
+		wg.Add(1)
+		newTransaction := transactions.Transaction{
+			Id:            uuid.New().String(),
+			Amount:        1000,
+			UserId:        uuid.New().String(),
+			AccountID:     "account123",
+			Type:          "TRANSFER",
+			Method:        "PIX",
+			Destination:   "pixkey123",
+			Status: "PENDING",
+		}		
+		
+		fmt.Printf("Start processing transaction %d\n", i)
+		go paralelWorker(&newTransaction, &wg)
+	}
+	wg.Wait() 
+	fmt.Printf("Itens salvos na base %d", len(database.GetAllTransactions()))
 	
+}
+
+func paralelWorker(transaction *transactions.Transaction, wg *sync.WaitGroup){	
+	defer wg.Done()
+	processor.ProcessTransaction(transaction)
 }

@@ -7,13 +7,14 @@ import (
 )
 
 type Transaction struct {
-	TransactionID string `json:"transactionId"`
+	Id string `json:"transactionId"`
 	Amount        int    `json:"amount"`
 	UserId        string `json:"userId"`
 	AccountID     string `json:"accountId"`
 	Type          string `json:"type"`
 	Method        string `json:"method"`
 	Destination   string `json:"destination"`
+	Status        string `json:"status"`
 }
 
 const (
@@ -30,7 +31,7 @@ const (
 func (t *Transaction) Validate() error {
 	var errorList []error
 	
-	if _, err := uuid.Parse(t.TransactionID); err != nil {
+	if _, err := uuid.Parse(t.Id); err != nil {
 		errorList = append(errorList, errors.New("TransactionID is not a valid UUID"))
 	}
 
